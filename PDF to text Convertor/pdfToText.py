@@ -1,11 +1,12 @@
 import PyPDF2
-import os
+import tkinter as tk
+from tkinter import filedialog
 
-loc = input("Enter Complete Pdf Location : ")
-file  = input("Enter file name (e.g., example.pdf): ")
+root = tk.Tk()
+root.withdraw()
+file_path = filedialog.askopenfilename(title = "Select Pdf to start with") 
 
-path = os.path.join(loc, file)
-pdf = open(path, 'rb')
+pdf = open(file_path, 'rb')
 pdfReader = PyPDF2.PdfFileReader(pdf)
 
 pages = pdfReader.numPages
@@ -18,7 +19,11 @@ for pg in range(pages):
     texts = pageObj.extractText()
     s += texts + "\n\n\n"
 
+folder_selected = filedialog.askdirectory(title = "Select directory to save .txt file")         # Select directory to store text file
+
 name = input("Enter name for text file: ")
-with open(os.path.join(loc, f"{name}.txt"), "w") as file_obj:
+name = folder_selected + "/" + name + ".txt"
+
+with open(name, "w") as file_obj:
     file_obj.write(s)
-print("PDF converted succesfully and stored at", loc)
+print("PDF converted succesfully and stored => ", name)
